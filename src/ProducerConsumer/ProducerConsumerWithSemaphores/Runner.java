@@ -18,8 +18,11 @@ public class Runner {
         */
         Queue<UnitOfWork> buffer = new ConcurrentLinkedDeque<>();
         int maxSize = 20; //buffer size
+
+        // Semaphores below ensure that the messages don't overflow or underflow in the above queue
         Semaphore forProducer = new Semaphore(maxSize);
         Semaphore forConsumer = new Semaphore(0);
+
         Set<Producer> producers = producerNames
                 .stream()
                 .map(name -> new Producer(name, buffer, forProducer, forConsumer))
